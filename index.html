@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIG Bragança | Pro</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="map-overlay-header">
+        <div class="header-content">
+            <img src="data:image/png;base64,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" alt="Galo" class="map-logo">
+            <h1 id="mainTitle">MUNICÍPIO DE BRAGANÇA </h1>
+        </div>
+    </header>
+
+    <aside class="controls">
+        <h3 style="color: #ff8c1a; font-size: 14px; letter-spacing: 1px; margin-bottom: 15px;">CONFIGURAÇÕES</h3>
+        
+        <button type="button" id="btnCargarGeoJSON" class="map-button">CARREGAR DADOS</button>
+
+        <div class="separator"></div>
+
+        <label>MAPA BASE
+            <select id="baseMapSelect">
+                <option value="dark">Modo Escuro (CartoDB)</option>
+                <option value="streets">OpenStreetMap (Ruas)</option>
+                <option value="satellite">Satélite (Esri)</option>
+            </select>
+        </label>
+
+        <label>MÉTODO ESTATÍSTICO
+            <select id="classificationSelect">
+                <option value="jenks" selected>Quebras Naturais (Jenks)</option>
+                <option value="equal">Intervalos Iguais</option>
+                <option value="quartiles">Quartis (25% cada)</option>
+            </select>
+        </label>
+
+        <label>GAMA DE CORES
+            <select id="paletteSelect">
+                <option value="reds">Vermelhos</option>
+                <option value="purples">Violetas</option>
+                <option value="greens">Verdes</option>
+                <option value="yellows">Amarelos</option>
+                <option value="blues" selected>Azuis</option>
+            </select>
+        </label>
+
+        <label>SELECIONAR FREGUESIA
+            <select id="labelSelect">
+                <option value="">Aguardando dados...</option>
+            </select>
+        </label>
+
+        <div id="infoBox" class="info-card">
+            <p id="detailNome"><b>Nome:</b> --</p>
+            <p id="detailTaxa"><b>Taxa:</b> --</p>
+        </div>
+    </aside>
+
+    <div class="side-images">
+    <div class="marco-fijo">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu5x6jMPMGjvqkhWLAz6w9Ijw5UkF5p5ILnw&s" alt="Escudo">
+    </div>
+    <div class="marco-fijo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Braganza_%28Portugal%29.png" alt="Bandeira">
+    </div>
+</div>
+
+    <div id="map"></div>
+
+
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
