@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const map = L.map('map', { zoomControl: false, layers: [baseLayers.dark] }).setView([41.8061, -6.7567], 12);
 
-
     const labelSelect = document.getElementById('labelSelect');
     const classificationSelect = document.getElementById('classificationSelect');
     const paletteSelect = document.getElementById('paletteSelect');
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let geojsonLayer, legend, currentBreaks = [];
 
-    // 2. Definición de Paletas por Intensidad
+    // 2. Definición de Paletas
     const colorSchemes = {
         reds: ['#fee5d9', '#fcae91', '#fb6a4a', '#de2d26', '#a50f15'],
         purples: ['#f2f0f7', '#cbc9e2', '#9e9ac8', '#756bb1', '#54278f'],
@@ -32,14 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return found ? props[found] : null;
     };
 
-
-
-       // 2. LÓGICA ESTADÍSTICA
+    // --- CORRECCIÓN AQUÍ: Función computeBreaks cerrada correctamente ---
     function computeBreaks(data, method) {
         const vals = data.features
-            .map(f => parseFloat(getProp(f.properties, ['tasa_promedio', 'tasa', 'valor'])) || 0)
+            .map(f => parseFloat(getProp(f.properties, ['tasa_promedio', 'tasa', 'valor', 'taxa'])) || 0)
             .sort((a, b) => a - b);
         const min = vals[0], max = vals[vals.length - 1];
+        
         if (method === 'equal') {
             return Array.from({ length: 6 }, (_, i) => min + (i * (max - min) / 5));
         } else if (method === 'quartiles') {
@@ -47,11 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             return [min, vals[Math.floor(vals.length * 0.1)], vals[Math.floor(vals.length * 0.3)], vals[Math.floor(vals.length * 0.6)], vals[Math.floor(vals.length * 0.85)], max];
         }
-    
+    }
 
-    function getColorIndex(v, brk) {
-        for (let i = 0; i < 5; i++) if (v >= brk[i] && v <= brk[i + 1]) return i;
-        return 4;
+    // --- CORRECCIÓN AQUÍ: Nueva función getColor ---
+    function getColor(v, brk) {
+        for (let i = 0; i < 5; i++) {
+            if (v >= brk[i] && v <= brk[i + 1]) return currentPalette[i];
+        }
+        return currentPalette[4];
     }
 
     // Carga y Dibujo
@@ -61,16 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 currentBreaks = computeBreaks(data, classificationSelect.value);
                 if (geojsonLayer) map.removeLayer(geojsonLayer);
-                labelSelect.innerHTML = '<option value="">Selecione...</option>';
+                labelSelect.innerHTML = '<option value="">Seleccione...</option>';
 
                 geojsonLayer = L.geoJSON(data, {
                     style: (f) => ({
-                        fillColor: getColor(parseFloat(getProp(f.properties, ['taxa', 'rate'])) || 0, currentBreaks),
+                        fillColor: getColor(parseFloat(getProp(f.properties, ['taxa', 'rate', 'tasa'])) || 0, currentBreaks),
                         weight: 1.5, color: 'white', fillOpacity: 0.75
                     }),
                     onEachFeature: (f, layer) => {
                         const nome = getProp(f.properties, ['nome', 'name', 'freguesia']);
-                        const taxa = getProp(f.properties, ['taxa', 'rate']) || 0;
+                        const taxa = getProp(f.properties, ['taxa', 'rate', 'tasa']) || 0;
                         layer.on('click', () => seleccionarFreguesia(nome, taxa, layer));
                         labelSelect.add(new Option(nome, nome));
                     }
@@ -87,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         geojsonLayer.eachLayer(l => {
             geojsonLayer.resetStyle(l);
-            l.unbindTooltip(); 
+            if (l.getTooltip()) l.unbindTooltip(); 
         });
 
         layer.setStyle({ color: '#ff8c1a', weight: 5, fillOpacity: 0.9 });
@@ -95,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         layer.bringToFront();
         map.fitBounds(layer.getBounds(), { padding: [40, 40] });
 
-        // Sincronizar Leyenda
         document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('active-legend'));
         document.querySelectorAll('.legend-item').forEach((item, index) => {
             if (taxa >= currentBreaks[index] && taxa <= currentBreaks[index + 1]) {
@@ -123,15 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
         legend.addTo(map);
     }
 
-    // Manejadores de Eventos UI
     baseMapSelect.onchange = (e) => {
         Object.values(baseLayers).forEach(layer => map.removeLayer(layer));
         baseLayers[e.target.value].addTo(map);
     };
-
-
-
-
 
     paletteSelect.onchange = (e) => {
         currentPalette = colorSchemes[e.target.value];
@@ -149,10 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.highlightRange = (min, max) => {
+        if (!geojsonLayer) return;
         geojsonLayer.eachLayer(layer => {
-            const val = parseFloat(getProp(layer.feature.properties, ['taxa', 'rate'])) || 0;
+            const val = parseFloat(getProp(layer.feature.properties, ['taxa', 'rate', 'tasa'])) || 0;
             layer.setStyle(val >= min && val <= max ? { fillOpacity: 1, weight: 3 } : { fillOpacity: 0.1, weight: 1 });
         });
     };
-    window.resetHighlight = () => geojsonLayer.eachLayer(l => geojsonLayer.resetStyle(l));
+    window.resetHighlight = () => {
+        if (geojsonLayer) geojsonLayer.eachLayer(l => geojsonLayer.resetStyle(l));
+    };
 });
