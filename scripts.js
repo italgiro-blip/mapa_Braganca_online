@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             return [min, vals[Math.floor(vals.length * 0.1)], vals[Math.floor(vals.length * 0.3)], vals[Math.floor(vals.length * 0.6)], vals[Math.floor(vals.length * 0.85)], max];
         }
-    }
+    
 
     function getColorIndex(v, brk) {
         for (let i = 0; i < 5; i++) if (v >= brk[i] && v <= brk[i + 1]) return i;
