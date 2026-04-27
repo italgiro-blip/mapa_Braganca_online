@@ -26,10 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentPalette = colorSchemes.blues;
 
-    const getProp = (props, keys) => {
-        const found = Object.keys(props).find(k => keys.includes(k.toLowerCase()));
-        return found ? props[found] : null;
-    };
+    // 1. Modificamos el buscador de propiedades para que sea más flexible
+const getProp = (props, keys) => {
+    // Busca la primera coincidencia sin importar mayúsculas/minúsculas o espacios
+    const found = Object.keys(props).find(k => 
+        keys.includes(k.toLowerCase().trim())
+    );
+    return found ? props[found] : null;
+};
 
     // --- CORRECCIÓN AQUÍ: Función computeBreaks cerrada correctamente ---
     function computeBreaks(data, method) {
@@ -64,18 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (geojsonLayer) map.removeLayer(geojsonLayer);
                 labelSelect.innerHTML = '<option value="">Seleccione...</option>';
 
-                geojsonLayer = L.geoJSON(data, {
-                    style: (f) => ({
-                        fillColor: getColor(parseFloat(getProp(f.properties, ['taxa', 'rate', 'tasa'])) || 0, currentBreaks),
-                        weight: 1.5, color: 'white', fillOpacity: 0.75
-                    }),
-                    onEachFeature: (f, layer) => {
-                        const nome = getProp(f.properties, ['nome', 'name', 'freguesia']);
-                        const taxa = getProp(f.properties, ['taxa', 'rate', 'tasa']) || 0;
-                        layer.on('click', () => seleccionarFreguesia(nome, taxa, layer));
-                        labelSelect.add(new Option(nome, nome));
-                    }
-                }).addTo(map);
+                // 2. En la carga del GeoJSON (dentro del fetch)
+geojsonLayer = L.geoJSON(data, {
+    style: (f) => {
+        // Buscamos 'taxa'
+        const valorTaxa = parseFloat(getProp(f.properties, ['taxa', 'tasa'])) || 0;
+        return {
+            fillColor: getColor(valorTaxa, currentBreaks),
+            weight: 1.5, 
+            color: 'white', 
+            fillOpacity: 0.75
+        };
+    },
+                   onEachFeature: (f, layer) => {
+        // Buscamos 'nome' y 'taxa' explícitamente
+        const nome = getProp(f.properties, ['nome', 'name']) || "Sin nombre";
+        const taxa = getProp(f.properties, ['taxa', 'tasa']) || 0;
+        
+        layer.on('click', () => seleccionarFreguesia(nome, taxa, layer));
+        
+        // Llenar el selector
+        labelSelect.add(new Option(nome, nome));
+    }
+}).addTo(map);
                 addLegend();
                 map.fitBounds(geojsonLayer.getBounds());
             });
