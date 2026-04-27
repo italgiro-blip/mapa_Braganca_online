@@ -34,30 +34,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Lógica Estadística
+       // 2. LÓGICA ESTADÍSTICA
     function computeBreaks(data, method) {
-        const values = data.features.map(f => parseFloat(getProp(f.properties, ['taxa', 'rate'])) || 0).sort((a,b) => a-b);
-        const n = 4; // 4 rangos para 5 breaks
-        if (method === 'quartiles') {
-            return [values[0], values[Math.floor(values.length * 0.25)], values[Math.floor(values.length * 0.5)], values[Math.floor(values.length * 0.75)], values[values.length - 1]];
-        }
+        const vals = data.features
+            .map(f => parseFloat(getProp(f.properties, ['tasa_promedio', 'tasa', 'valor'])) || 0)
+            .sort((a, b) => a - b);
+        const min = vals[0], max = vals[vals.length - 1];
         if (method === 'equal') {
-            const min = values[0], max = values[values.length-1];
-            const step = (max - min) / n;
-            return Array.from({length: n + 1}, (_, i) => min + i * step);
+            return Array.from({ length: 6 }, (_, i) => min + (i * (max - min) / 5));
+        } else if (method === 'quartiles') {
+            return [vals[0], vals[Math.floor(vals.length * 0.2)], vals[Math.floor(vals.length * 0.4)], vals[Math.floor(vals.length * 0.6)], vals[Math.floor(vals.length * 0.8)], vals[vals.length - 1]];
+        } else {
+            return [min, vals[Math.floor(vals.length * 0.1)], vals[Math.floor(vals.length * 0.3)], vals[Math.floor(vals.length * 0.6)], vals[Math.floor(vals.length * 0.85)], max];
         }
-        // Jenks simplificado
-        const breaks = [values[0]];
-        for(let i=1; i<n; i++) breaks.push(values[Math.floor(i * values.length / n)]);
-        breaks.push(values[values.length - 1]);
-        return breaks;
     }
 
-    function getColor(v, breaks) {
-        for (let i = 0; i < breaks.length - 1; i++) {
-            if (v >= breaks[i] && v <= breaks[i+1]) return currentPalette[i];
-        }
-        return currentPalette[currentPalette.length - 1];
+    function getColorIndex(v, brk) {
+        for (let i = 0; i < 5; i++) if (v >= brk[i] && v <= brk[i + 1]) return i;
+        return 4;
     }
 
     // Carga y Dibujo
