@@ -17,11 +17,11 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 10px; b
 .info-card { margin-top: 15px; padding: 15px; background: rgba(255,140,26,0.15); border: 1px solid #ff8c1a; border-radius: 8px; }
 .info-card p { margin: 5px 0; font-size: 15px; color: #fff; }
 
-.legend-horizontal { background: rgba(0, 0, 0, 0.85); padding: 8px 15px; border-radius: 12px; border: 1px solid #ff8c1a; box-shadow: 0 8px 32px rgba(0,0,0,0.8); margin: 25px; }
+.legend-horizontal { background: rgba(0, 0, 0, 0.85); padding: 5px 10px; border-radius: 10px; border: 1px solid #ff8c1a; box-shadow: 0 8px 32px rgba(0,0,0,0.8); margin: 25px; }
 .legend-container { display: flex; gap: 10px; align-items: center; }
-.legend-item { min-width: 100px; text-align: center; cursor: pointer; transition: 0.3s ease; }
+.legend-item { min-width: 60px; text-align: center; cursor: pointer; transition: 0.3s ease; }
 .legend-color { height: 10px; border-radius: 4px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.3); }
-.legend-text { color: #fff; font-size: 10px; font-weight: bold; }
+.legend-text { color: #fff; font-size: 9px; font-weight: bold; }
 
 .active-legend { transform: translateY(-10px) scale(1.15); background: rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 5px; box-shadow: 0 0 20px #ff8c1a; }
 
