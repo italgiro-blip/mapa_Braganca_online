@@ -37,21 +37,7 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 10px; b
     gap: 20px; 
 }
 
-/* ESTO CREA DOS CAJAS MILIMÉTRICAMENTE IGUALES */
-.marco-fijo {
-    width: 120px !important;   /* AJUSTA A TU GUSTO, PERO SERÁN IGUALES */
-    height: 120px !important;  /* DEBE SER IGUAL AL WIDTH PARA QUE SEA CUADRADO */
-    position: relative;
-    overflow: hidden;
-   background: transparent;    /* Fondo transparente */
-    border: none !important;    /* Borde transparente/eliminado */
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    box-sizing: border-box;
-}
+
 
 /* EL MARCO SE AJUSTA AUTOMÁTICAMENTE AL TAMAÑO DE LA IMAGEN */
 .marco-fijo {
