@@ -53,16 +53,30 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 10px; b
     box-sizing: border-box;
 }
 
-/* ESTO FUERZA A LA IMAGEN A QUEDARSE DENTRO DEL CUADRADO */
-.marco-fijo img {
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-    /* ESTO EVITA QUE UNA SE ESTIRE MÁS QUE LA OTRA */
-    object-fit: contain; 
+/* EL MARCO SE AJUSTA AUTOMÁTICAMENTE AL TAMAÑO DE LA IMAGEN */
+.marco-fijo {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    border: none !important;
+    border-radius: 8px;
+    display: inline-flex; /* Se ajusta al contenido en lugar de expandirse al 100% */
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* EFECTO DE ROTACIÓN AL PASAR EL MOUSE POR EL MARCO */
+/* LA IMAGEN MANTIENE SU PROPORCIÓN NATURAL CON UN LÍMITE MÁXIMO */
+.marco-fijo img {
+    max-width: 120px;   /* Tamaño máximo opcional para que no queden gigantescas */
+    max-height: 120px;  /* Puedes cambiar este valor según prefieras */
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+/* EFECTO DE ROTACIÓN AL PASAR EL MOUSE */
 .marco-fijo:hover {
     transform: rotate(5deg) scale(1.1);
     transition: 0.3s;
