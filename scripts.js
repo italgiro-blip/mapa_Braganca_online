@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Configuración de Mapas Base
     const baseLayers = {
-        dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'),
         streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
         satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}')
     };
 
-    const map = L.map('map', { zoomControl: false, layers: [baseLayers.dark] }).setView([41.8061, -6.7567], 12);
+    const map = L.map('map', { zoomControl: false, layers: [baseLayers.streets] }).setView([41.8061, -6.7567], 12);
 
     const labelSelect = document.getElementById('labelSelect');
     const classificationSelect = document.getElementById('classificationSelect');
