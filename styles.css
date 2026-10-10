@@ -44,7 +44,7 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 10px; b
     position: relative;
     overflow: hidden;
     background: transparent;
-    border: none !important;
+    border: #ff8c1a 8px !important;
     border-radius: 8px;
     display: inline-flex; /* Se ajusta al contenido en lugar de expandirse al 100% */
     align-items: center;
@@ -55,8 +55,8 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 10px; b
 
 /* LA IMAGEN MANTIENE SU PROPORCIÓN NATURAL CON UN LÍMITE MÁXIMO */
 .marco-fijo img {
-    max-width: 120px;   /* Tamaño máximo opcional para que no queden gigantescas */
-    max-height: 120px;  /* Puedes cambiar este valor según prefieras */
+    max-width: 150px;   /* Tamaño máximo opcional para que no queden gigantescas */
+    max-height: 150px;  /* Puedes cambiar este valor según prefieras */
     width: auto;
     height: auto;
     display: block;
