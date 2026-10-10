@@ -43,8 +43,8 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 10px; b
     height: 120px !important;  /* DEBE SER IGUAL AL WIDTH PARA QUE SEA CUADRADO */
     position: relative;
     overflow: hidden;
-    background: #ffffff;
-    border: 2px solid #ff8c1a;
+   background: transparent;    /* Fondo transparente */
+    border: none !important;    /* Borde transparente/eliminado */
     border-radius: 8px;
     display: flex;
     align-items: center;
